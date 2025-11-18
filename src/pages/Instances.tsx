@@ -499,58 +499,55 @@ export default function Instances() {
 
       {/* Delete Confirmation Modal */}
       <Dialog open={deleteModal.isOpen} onOpenChange={closeDeleteModal}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle className="flex items-center gap-2 text-red-400 dark:text-red-500">
+            <DialogTitle className="flex items-center gap-2 text-destructive">
               <Trash2 className="h-5 w-5" />
-              Remover Instância
+              Confirmar Exclusão
             </DialogTitle>
-            <DialogDescription className="text-sidebar-foreground/70 dark:text-gray-400">
-              Você está prestes a remover a instância{' '}
-              <strong>{deleteModal.instance?.instanceName}</strong>. Esta ação
-              não pode ser desfeita.
+            <DialogDescription>
+              Tem certeza de que deseja excluir a instância{' '}
+              <strong>{deleteModal.instance?.instanceName}</strong>? Esta ação é irreversível.
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-sidebar-foreground dark:text-gray-400">
-                Digite o nome da instância para confirmar:
-              </label>
-              <Input
-                placeholder={deleteModal.instance?.instanceName || ''}
-                value={deleteModal.confirmationText}
-                onChange={(e) =>
-                  setDeleteModal((prev) => ({
-                    ...prev,
-                    confirmationText: e.target.value,
-                  }))
-                }
-                className="mt-2 bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50 dark:text-gray-400 dark:placeholder:text-gray-400"
-              />
-            </div>
+          <div className="space-y-2">
+            <label htmlFor="delete-confirm" className="text-sm font-medium text-muted-foreground">
+              Para confirmar, digite o nome da instância abaixo:
+            </label>
+            <Input
+              id="delete-confirm"
+              placeholder={deleteModal.instance?.instanceName || ''}
+              value={deleteModal.confirmationText}
+              onChange={(e) =>
+                setDeleteModal((prev) => ({
+                  ...prev,
+                  confirmationText: e.target.value,
+                }))
+              }
+            />
           </div>
 
-          <DialogFooter className="flex gap-2">
+          <DialogFooter className="mt-4">
             <Button
               variant="outline"
               onClick={closeDeleteModal}
-              className="bg-sidebar border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent dark:text-gray-400 dark:hover:bg-sidebar-accent"
             >
               Cancelar
             </Button>
             <Button
               variant="destructive"
               onClick={handleConfirmDelete}
-              disabled={
-                !isDeleteConfirmationValid ||
-                isDeleting === deleteModal.instance?.instanceName
-              }
-              className="bg-red-600 hover:bg-red-700 text-white dark:bg-red-600 dark:hover:bg-red-700"
+              disabled={!isDeleteConfirmationValid || isDeleting === deleteModal.instance?.instanceName}
             >
-              {isDeleting === deleteModal.instance?.instanceName
-                ? 'Removendo...'
-                : 'Remover Instância'}
+              {isDeleting === deleteModal.instance?.instanceName ? (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4 animate-spin" />
+                  Excluindo...
+                </>
+              ) : (
+                'Excluir Instância'
+              )}
             </Button>
           </DialogFooter>
         </DialogContent>

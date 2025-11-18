@@ -1,17 +1,15 @@
-/**
- * Instance Card Component
- * Displays an Evolution GO instance as a card with status and actions
- */
-
-import { Button, Card, CardContent, Badge } from "@evoapi/design-system";
+// src/components/instances/InstanceCard.tsx
+import { Button, Card, CardContent } from "@evoapi/design-system";
 import {
   Settings,
   Trash2,
   Power,
   PowerOff,
   MessageSquare,
+  Dot,
 } from "lucide-react";
 import type { Instance } from "@/types/instance";
+import { cn } from '@/utils/cn';
 
 type InstanceCardProps = {
   instance: Instance;
@@ -23,19 +21,25 @@ type InstanceCardProps = {
   onSendMessage?: (instance: Instance) => void;
 };
 
-const getStatusBadge = (status: string) => {
-  if (status === "open") {
-    return (
-      <Badge className="bg-green-500/10 text-green-500 hover:bg-green-500/20">
-        Conectado
-      </Badge>
-    );
-  }
-
+const StatusIndicator = ({ status }: { status: string }) => {
+  const isConnected = status === "open";
   return (
-    <Badge className="bg-red-500/10 text-red-500 hover:bg-red-500/20">
-      Desconectado
-    </Badge>
+    <div className="flex items-center">
+      <Dot
+        className={cn(
+          "h-6 w-6",
+          isConnected ? "text-green-500" : "text-red-500"
+        )}
+      />
+      <span
+        className={cn(
+          "text-sm font-semibold",
+          isConnected ? "text-green-500" : "text-red-500"
+        )}
+      >
+        {isConnected ? "Conectado" : "Desconectado"}
+      </span>
+    </div>
   );
 };
 
@@ -51,125 +55,86 @@ export default function InstanceCard({
   const isConnected = instance.status === "open";
 
   return (
-    <Card className="group relative bg-sidebar border-sidebar-border hover:bg-sidebar-accent/30 transition-all duration-300 hover:shadow-lg hover:shadow-black/10 overflow-hidden">
-      <CardContent className="p-0">
-        {/* Header with icon, name and status */}
-        <div className="flex items-center gap-3 p-4 border-b border-sidebar-border">
-          {instance.profilePicUrl && (
-            <div className="flex-shrink-0 dark">
-              <div className="rounded-lg bg-gray-900 flex items-center justify-center w-14 h-14 overflow-hidden">
+    <Card className="flex flex-col justify-between overflow-hidden shadow-lg transition-all hover:shadow-xl hover:-translate-y-1">
+      <CardContent className="p-4">
+        <div className="flex items-start justify-between">
+          <div className="flex items-center gap-4">
+            {instance.profilePicUrl && (
+              <div className="flex-shrink-0">
                 <img
                   src={instance.profilePicUrl}
                   alt={instance.profileName || instance.instanceName}
-                  className="w-12 h-12 object-cover rounded-lg"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = "none";
-                  }}
+                  className="h-12 w-12 rounded-full object-cover"
                 />
               </div>
+            )}
+            <div className="flex-1">
+              <h3 className="text-lg font-bold text-foreground">
+                {instance.profileName || instance.instanceName}
+              </h3>
+              <p className="text-sm text-muted-foreground">
+                {instance.instanceName}
+              </p>
             </div>
-          )}
-
-          <div className="flex-1 min-w-0">
-            <h3 className="font-semibold text-base truncate text-sidebar-foreground">
-              {instance.profileName || instance.instanceName}
-            </h3>
-            <p className="text-xs text-sidebar-foreground/60 truncate">
-              {instance.instanceName}
-            </p>
           </div>
-
-          <div className="flex-shrink-0">{getStatusBadge(instance.status)}</div>
+          <StatusIndicator status={instance.status} />
         </div>
 
-        {/* Details section */}
-        <div className="px-4 py-3 text-xs text-sidebar-foreground/70 space-y-1">
-          <div className="flex items-center justify-between">
-            <span>Status</span>
-            <span className="font-mono">{instance.status}</span>
+        {instance.profileStatus && (
+          <div className="mt-4 text-sm text-muted-foreground">
+            <p className="truncate">{instance.profileStatus}</p>
           </div>
-          {instance.profileStatus && (
-            <div className="flex items-center justify-between">
-              <span>Recado</span>
-              <span className="font-mono truncate ml-2 max-w-[150px]">
-                {instance.profileStatus}
-              </span>
-            </div>
-          )}
-          {instance.owner && (
-            <div className="flex items-center justify-between">
-              <span>Proprietário</span>
-              <span className="font-mono truncate ml-2 max-w-[150px]">
-                {instance.owner}
-              </span>
-            </div>
-          )}
-        </div>
+        )}
+      </CardContent>
 
-        {/* Action buttons - hover effect */}
-        <div className="flex border-t border-sidebar-border opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          {/* Connect/Disconnect Button */}
-          {!isConnected && (
-            <Button
-              variant="ghost"
-              className="flex-1 rounded-none h-12 text-green-500 hover:text-green-400 hover:bg-green-500/10"
-              onClick={() => onConnect(instance)}
-            >
-              <Power className="h-4 w-4 mr-2" />
-              Conectar
-            </Button>
-          )}
-
-          {isConnected && (
-            <Button
-              variant="ghost"
-              className="flex-1 rounded-none h-12 text-yellow-500 hover:text-yellow-400 hover:bg-yellow-500/10"
-              onClick={() => onDisconnect(instance)}
-            >
-              <PowerOff className="h-4 w-4 mr-2" />
-              Desconectar
-            </Button>
-          )}
-
-          <div className="w-px bg-sidebar-border" />
-
-          {/* Send Message Button - only show if connected */}
-          {isConnected && onSendMessage && (
-            <>
-              <Button
-                variant="ghost"
-                className="rounded-none h-12 px-4 text-blue-500 hover:text-blue-400 hover:bg-blue-500/10"
-                onClick={() => onSendMessage(instance)}
-              >
-                <MessageSquare className="h-4 w-4" />
-              </Button>
-              <div className="w-px bg-sidebar-border" />
-            </>
-          )}
-
-          {/* Settings Button */}
+      <div className="flex items-center justify-end gap-2 border-t border-border bg-muted/50 p-3">
+        {isConnected ? (
           <Button
             variant="ghost"
-            className="rounded-none h-12 px-4 text-gray-500 hover:text-gray-300 hover:bg-gray-500/10"
+            size="icon"
+            className="text-yellow-500 hover:bg-yellow-500/10 hover:text-yellow-400"
+            onClick={() => onDisconnect(instance)}
+          >
+            <PowerOff className="h-4 w-4" />
+          </Button>
+        ) : (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-green-500 hover:bg-green-500/10 hover:text-green-400"
+            onClick={() => onConnect(instance)}
+          >
+            <Power className="h-4 w-4" />
+          </Button>
+        )}
+        {isConnected && onSendMessage && (
+          <Button
+            variant="ghost"
+            size="icon"
+            className="text-blue-500 hover:bg-blue-500/10 hover:text-blue-400"
+            onClick={() => onSendMessage(instance)}
+          >
+            <MessageSquare className="h-4 w-4" />
+          </Button>
+        )}
+        <Button
+            variant="ghost"
+            size="icon"
+            className="text-muted-foreground hover:bg-muted"
             onClick={() => onSettings(instance)}
           >
             <Settings className="h-4 w-4" />
-          </Button>
-
-          <div className="w-px bg-sidebar-border" />
-
-          {/* Delete Button */}
-          <Button
-            variant="ghost"
-            className="rounded-none h-12 px-4 text-red-500 hover:text-red-400 hover:bg-red-500/10"
-            disabled={isDeleting === instance.instanceName}
-            onClick={() => onDelete(instance)}
-          >
-            <Trash2 className="h-4 w-4" />
-          </Button>
-        </div>
-      </CardContent>
+        </Button>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="text-red-500 hover:bg-red-500/10 hover:text-red-400"
+          disabled={isDeleting === instance.instanceName}
+          onClick={() => onDelete(instance)}
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      </div>
     </Card>
   );
 }
