@@ -6,37 +6,23 @@ function Header() {
   const { logout } = useAuth();
   const { theme, toggleTheme } = useDarkMode();
 
-  const handleLogout = () => {
-    logout();
-  };
-
   return (
-    <header className="flex h-16 items-center justify-between border-b border-sidebar-border bg-sidebar px-0 py-3 shadow-sm">
-      {/* Left side - empty space aligned with sidebar width */}
-      <div className="w-56 flex items-center px-4">
-        {/* Empty - logo is in sidebar */}
-      </div>
-
-      {/* Right side */}
-      <div className="flex items-center gap-2 px-4">
+    <header className="flex h-20 items-center justify-end border-b border-border bg-card px-6">
+      <div className="flex items-center gap-4">
         <button
           onClick={toggleTheme}
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent dark:text-gray-200 dark:hover:bg-sidebar-accent"
-          title={theme === 'dark' ? 'Modo claro' : 'Modo escuro'}
+          className="flex items-center justify-center h-10 w-10 rounded-full text-muted-foreground transition-colors duration-200 ease-in-out hover:bg-muted hover:text-foreground"
+          title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
         >
-          {theme === 'dark' ? (
-            <Sun className="h-4 w-4" />
-          ) : (
-            <Moon className="h-4 w-4" />
-          )}
+          {theme === 'dark' ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
         </button>
 
         <button
-          onClick={handleLogout}
-          className="flex items-center gap-2 rounded-md px-3 py-2 text-sm font-medium text-sidebar-foreground hover:bg-sidebar-accent dark:text-gray-200 dark:hover:bg-sidebar-accent"
+          onClick={logout}
+          className="flex items-center gap-2 rounded-md px-4 py-2 text-sm font-semibold text-muted-foreground transition-colors duration-200 ease-in-out hover:bg-muted hover:text-foreground"
         >
-          <LogOut className="h-4 w-4" />
-          Sair
+          <LogOut className="h-5 w-5" />
+          <span>Logout</span>
         </button>
       </div>
     </header>
