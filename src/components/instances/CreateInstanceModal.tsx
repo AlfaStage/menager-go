@@ -137,7 +137,7 @@ export default function CreateInstanceModal({
             <Plus className="h-5 w-5 text-primary" />
             Nova Instância
           </DialogTitle>
-          <DialogDescription className="text-sidebar-foreground/70">
+          <DialogDescription>
             Crie uma nova instância WhatsApp para gerenciar suas conversas
           </DialogDescription>
         </DialogHeader>
@@ -154,14 +154,13 @@ export default function CreateInstanceModal({
               placeholder="ex: minha-instancia"
               disabled={isLoading}
               {...register('instanceName')}
-              className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
             />
             {errors.instanceName && (
               <p className="text-destructive text-sm">
                 {errors.instanceName.message}
               </p>
             )}
-            <p className="text-xs text-sidebar-foreground/60">
+            <p className="text-xs text-muted-foreground">
               Use apenas letras, números, hífen (-) e underscore (_)
             </p>
           </div>
@@ -175,14 +174,13 @@ export default function CreateInstanceModal({
               placeholder="Token personalizado (UUID)"
               disabled={isLoading}
               {...register('token')}
-              className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
             />
             {errors.token && (
               <p className="text-destructive text-sm">
                 {errors.token.message}
               </p>
             )}
-            <p className="text-xs text-sidebar-foreground/60">
+            <p className="text-xs text-muted-foreground">
               Se não informado, será gerado um UUID automaticamente
             </p>
           </div>
@@ -194,7 +192,7 @@ export default function CreateInstanceModal({
               variant="outline"
               onClick={() => setShowProxyConfig(!showProxyConfig)}
               disabled={isLoading}
-              className="w-full justify-between bg-sidebar border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent"
+              className="w-full justify-between"
             >
               <span>Configuração de Proxy (Opcional)</span>
               {showProxyConfig ? (
@@ -205,7 +203,7 @@ export default function CreateInstanceModal({
             </Button>
 
             {showProxyConfig && (
-              <div className="space-y-4 pt-2 border-t border-sidebar-border">
+              <div className="space-y-4 pt-2 border-t">
                 {/* Proxy Host */}
                 <div className="space-y-2">
                   <Label htmlFor="proxyHost">Host do Proxy</Label>
@@ -215,7 +213,6 @@ export default function CreateInstanceModal({
                     placeholder="ex: proxy.example.com"
                     disabled={isLoading}
                     {...register('proxyHost')}
-                    className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
                   />
                   {errors.proxyHost && (
                     <p className="text-destructive text-sm">
@@ -233,7 +230,6 @@ export default function CreateInstanceModal({
                     placeholder="ex: 8080"
                     disabled={isLoading}
                     {...register('proxyPort')}
-                    className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
                   />
                   {errors.proxyPort && (
                     <p className="text-destructive text-sm">
@@ -251,7 +247,6 @@ export default function CreateInstanceModal({
                     placeholder="Usuário do proxy"
                     disabled={isLoading}
                     {...register('proxyUsername')}
-                    className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
                   />
                   {errors.proxyUsername && (
                     <p className="text-destructive text-sm">
@@ -269,7 +264,6 @@ export default function CreateInstanceModal({
                     placeholder="Senha do proxy"
                     disabled={isLoading}
                     {...register('proxyPassword')}
-                    className="bg-sidebar border-sidebar-border text-sidebar-foreground placeholder:text-sidebar-foreground/50"
                   />
                   {errors.proxyPassword && (
                     <p className="text-destructive text-sm">
@@ -281,13 +275,12 @@ export default function CreateInstanceModal({
             )}
           </div>
 
-          <DialogFooter className="flex gap-2 sm:gap-0">
+          <DialogFooter>
             <Button
               type="button"
               variant="outline"
               onClick={handleClose}
               disabled={isLoading}
-              className="bg-sidebar border-sidebar-border text-sidebar-foreground hover:bg-sidebar-accent"
             >
               Cancelar
             </Button>
