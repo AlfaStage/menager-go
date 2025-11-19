@@ -10,6 +10,7 @@ import InstanceSettings from '@/pages/InstanceSettings';
 import Messages from '@/pages/Messages';
 import Events from '@/pages/Events';
 import Settings from '@/pages/Settings';
+import Api from '@/pages/Api';
 import useAuth from '@/hooks/useAuth';
 import { DarkModeProvider } from '@/contexts/ThemeContext';
 
@@ -39,6 +40,7 @@ function App() {
               <Route path="messages" element={<Messages />} />
               <Route path="events" element={<Events />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="api" element={<Api />} />
             </Route>
             ) : (
               /* Redirect to login if not authenticated */
